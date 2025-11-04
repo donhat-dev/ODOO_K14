@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="training_order_list" model="ir.ui.view">
+        <field name="name">training.order.list</field>
+        <field name="model">training.order</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="order_number"></field>
+                <field name="customer_name"></field>
+                <field name="order_date"></field>
+            </list>
+        </field>
+    </record>
+
+    <record id="training_order_form" model="ir.ui.view">
+        <field name="name">training.order.form</field>
+        <field name="model">training.order</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="is_approved_1" invisible="1"></field>
+                    <field name="is_approved_2" invisible="1"></field>
+                    <field name="state" invisible="1"></field>
+                    <button string="Approve 1"
+                        type="object"
+                        name="button_approve_1"
+                        invisible="not is_approved_1">
+                    </button>
+                    <button string="Approve 2"
+                        type="object"
+                        name="button_approve_2"
+                        invisible="not is_approved_2 or state != 'approved_1'"></button>
+                    <field name="state" widget="statusbar"></field>
+                </header>
+                <sheet>
+                    <group string="Order Details">
+                        <group>
+                            <field name="order_number" invisible="1"></field>
+                            <field name="order_number"
+                                groups="hr.group_hr_manager"
+                                string="ID" readonly="order_number"></field>
+
+                            <field name="approve_1_user_id"></field>
+                            <field name="approve_2_user_id"></field>
+                        </group>
+                        <group>
+                            <field name="customer_name"
+                                invisible="not order_number"
+                            ></field>
+                            <field name="order_date" invisible="not order_number"></field>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="training_order_actions" model="ir.actions.act_window">
+        <field name="name">Training Order</field>
+        <field name="res_model">training.order</field>
+        <field name="view_mode">list,form</field>
+        <field name="view_id" ref="training_order_list" />
+    </record>
+
+    <menuitem
+        id="training_order_root"
+        name="Training Order"
+        sequence="10"
+    />
+
+    <menuitem
+        id="training_order_menu"
+        name="Order"
+        parent="training_center.training_order_root"
+        action="training_center.training_order_actions"
+        sequence="1"
+    />
+</odoo>

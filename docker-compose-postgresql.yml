@@ -1,0 +1,19 @@
+# docker-compose.yml
+version: "3.8" # Use Docker Compose version 3.8
+services:
+  # Define list of services
+  postgres:
+    # Service name
+    image: postgres:15 # Use PostgreSQL version 15 image (packaged by the official PostgreSQL team)
+    container_name: db # Name of the container in local environment
+    environment:
+      # Environment variables for PostgreSQL
+      POSTGRES_USER: odoo
+      POSTGRES_PASSWORD: odoo
+      POSTGRES_DB: postgres
+    ports:
+      # Port mapping
+      - "5432:5432" # Map host port 5432 to container port 5432
+    volumes:
+      - ./pgdata:/var/lib/postgresql/data # Persist database data on host machine
+    restart: always # Always restart the container if it stops
