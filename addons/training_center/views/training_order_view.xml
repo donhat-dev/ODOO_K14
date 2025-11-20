@@ -6,7 +6,11 @@
         <field name="arch" type="xml">
             <list>
                 <field name="order_number"></field>
-                <field name="customer_name"></field>
+                <!-- <field name="customer_name"></field> -->
+
+                <field name="customer_id"></field>
+                <field name="lead_id"></field>
+
                 <field name="order_date"></field>
             </list>
         </field>
@@ -35,11 +39,13 @@
                 <sheet>
                     <group string="Order Details">
                         <group>
+                            <field name="customer_id"
+                                options='{"no_create": False, "no_open": False}'
+                            ></field>
+                            <field name="lead_id"></field>
                             <field name="order_number" invisible="1"></field>
                             <field name="order_number"
-                                groups="hr.group_hr_manager"
                                 string="ID" readonly="order_number"></field>
-
                             <field name="approve_1_user_id"></field>
                             <field name="approve_2_user_id"></field>
                         </group>

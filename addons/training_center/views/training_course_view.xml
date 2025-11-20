@@ -1,0 +1,140 @@
+<odoo>
+    <record id="view_training_course_tree" model="ir.ui.view">
+        <field name="name">training.course.tree</field>
+        <field name="model">training.course</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="code" />
+                <field name="start_date" />
+                <field name="end_date" />
+                <field name="active" />
+            </list>
+        </field>
+    </record>
+
+    <record id="view_training_course_form" model="ir.ui.view">
+        <field name="name">training.course.form</field>
+        <field name="model">training.course</field>
+        <field name="arch" type="xml">
+            <form>
+                <header>
+                    <field name="state" widget="statusbar"></field>
+
+                    <button name="button_publish"
+                        class="btn-primary"
+                        type="object"
+                        string="Publish"
+                        invisible="state != 'draft'"
+                    >
+                    </button>
+                    <button name="button_archive"
+                        class="btn-secondary"
+                        type="object"
+                        string="Archive"
+                        invisible="state != 'published'"
+                    >
+                    </button>
+                </header>
+                <sheet>
+                    <group>
+                        <field name="name" />
+                        <field name="code" />
+                        <field name="description" />
+                        <field name="start_date" />
+                        <field name="end_date" />
+                        <field name="active" widget="boolean_toggle" />
+
+                        <field name="tutor_id" />
+                        <field name="level_ids" widget="many2many_tags" />
+                    </group>
+                    <notebook>
+                        <page string="Sessions">
+                            <field name="course_session_ids"></field>
+                        </page>
+                    </notebook>
+                </sheet>
+                <chatter />
+            </form>
+        </field>
+    </record>
+
+    <record id="action_training_course" model="ir.actions.act_window">
+        <field name="name">Courses</field>
+        <field name="res_model">training.course</field>
+        <field name="view_mode">list,form</field>
+    </record>
+
+    <menuitem id="menu_training_root" name="Training Course" sequence="10"
+        parent="training_center.training_order_root"
+    />
+    <menuitem id="menu_training_course" name="Courses" parent="menu_training_root"
+        action="action_training_course" sequence="20" />
+
+    <!-- Session Tree & Form View -->
+    <record id="view_training_course_session_tree" model="ir.ui.view">
+        <field name="name">training.course.session.tree</field>
+        <field name="model">training.course.session</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="course_id" />
+                <field name="session_date" />
+                <field name="instructor" />
+            </list>
+        </field>
+    </record>
+    <record id="view_training_course_session_form" model="ir.ui.view">
+        <field name="name">training.course.session.form</field>
+        <field name="model">training.course.session</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="course_id" />
+                        <field name="session_date" />
+                        <field name="instructor" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_training_course_session" model="ir.actions.act_window">
+        <field name="name">Course Sessions</field>
+        <field name="res_model">training.course.session</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <menuitem id="menu_training_course_session" name="Course Sessions" parent="menu_training_root"
+        action="action_training_course_session" sequence="30" />
+
+    <!-- Level Tree & Form View -->
+    <record id="view_training_course_level_tree" model="ir.ui.view">
+        <field name="name">training.course.level.tree</field>
+        <field name="model">training.course.level</field>
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+            </list>
+        </field>
+    </record>
+    <record id="view_training_course_level_form" model="ir.ui.view">
+        <field name="name">training.course.level.form</field>
+        <field name="model">training.course.level</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="name" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+    <record id="action_training_course_level" model="ir.actions.act_window">
+        <field name="name">Course Levels</field>
+        <field name="res_model">training.course.level</field>
+        <field name="view_mode">list,form</field>
+    </record>
+    <menuitem id="menu_training_course_level" name="Course Levels" parent="menu_training_root"
+        action="action_training_course_level" sequence="40" />
+
+</odoo>

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- View sale.order form -->
+    <record id="view_sale_order_form_inherit" model="ir.ui.view">
+        <field name="name">view.sale.order.form</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr='//field[@name="payment_term_id"]' position="after">
+                <field name="source_id"></field>
+            </xpath>
+
+            <xpath
+                expr="//form/sheet/notebook//field[@name='source_id']/.."
+                position="replace">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+
+            <xpath expr="." position="inside">
+                <style>
+                    .o-mail-ChatterContainer.o-aside, .o-mail-Form-chatter.o-aside{
+                        width: 50% !important;
+                    }
+                </style>
+            </xpath>
+
+            <field name="partner_id" position="after">
+                <field name="partner_id_code" />
+            </field>
+
+            <!-- 
+            <xpath expr="//chatter" position="attributes">
+                <attribute name="invisible">is_show_chatter</attribute>
+            </xpath> -->
+        </field>
+    </record>
+
+</odoo>

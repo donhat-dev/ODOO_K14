@@ -5,10 +5,11 @@
     "description": "This module adds a simple Training Center feature to Odoo.",
     "author": "Your Name",
     "category": "Tools",
-    "depends": ["base"],
+    "depends": ["base", "contacts", "crm", "mail"],
     "data": [
         "security/ir.model.access.csv",
-        "views/training_order_view.xml"
+        "views/training_order_view.xml",
+        "views/training_course_view.xml",
     ],
     "installable": True,
     "application": False,

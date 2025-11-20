@@ -6,6 +6,12 @@ class TrainingOrder(models.Model):
 
     order_number = fields.Char(string="Order Number", required=True)
     customer_name = fields.Char(string="Customer Name", default='Nhat', readonly=True)
+
+    customer_id = fields.Many2one(comodel_name='res.partner', string="Customer", ondelete="restrict")
+    lead_id = fields.Many2one('crm.lead', string="Related Lead")
+    
+    active = fields.Boolean(string="Active", default=True)
+
     order_date = fields.Date(string="Order Date")
     state = fields.Selection(
         [('draft', 'Draft'),
