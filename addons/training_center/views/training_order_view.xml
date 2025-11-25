@@ -48,6 +48,7 @@
                                 string="ID" readonly="order_number"></field>
                             <field name="approve_1_user_id"></field>
                             <field name="approve_2_user_id"></field>
+                            <field name="total_amount" readonly="1"></field>
                         </group>
                         <group>
                             <field name="customer_name"
@@ -55,7 +56,26 @@
                             ></field>
                             <field name="order_date" invisible="not order_number"></field>
                         </group>
+
+
                     </group>
+                    <group>
+                        <field name="order_line_ids" context="{'check_quantity_limit': False}">
+                            <list editable="bottom">
+                                <field name="name"></field>
+                                <!-- <field name="description"></field> -->
+                                <!-- <button name="action_open_options_wizard"
+                                    type="object"
+                                    string="Options"
+                                    class="oe_highlight" /> -->
+                                <field name="quantity"></field>
+                                <field name="unit_price"></field>
+                                <field name="total_price"></field>
+                            </list>
+                        </field>
+                    </group>
+
+
                 </sheet>
             </form>
         </field>

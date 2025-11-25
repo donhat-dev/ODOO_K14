@@ -1,10 +1,15 @@
 
 from odoo import models, fields, api
 
+from odoo.exceptions import ValidationError
+
+from odoo.tools import float_round
+
 class TrainingOrder(models.Model):
     _name = 'training.order'
+    _rec_name = 'order_number'
 
-    order_number = fields.Char(string="Order Number", required=True)
+    order_number = fields.Char(string="Order Number", readonly=True)
     customer_name = fields.Char(string="Customer Name", default='Nhat', readonly=True)
 
     customer_id = fields.Many2one(comodel_name='res.partner', string="Customer", ondelete="restrict")
@@ -45,8 +50,58 @@ class TrainingOrder(models.Model):
         compute='_compute_is_approved_2'
     )
 
+    order_line_ids = fields.One2many(
+        'training.order.line',
+        'order_id',
+        string="Order Lines"
+    )
+
+    total_amount = fields.Float(
+        string="Total Amount",
+        compute='_compute_total_amount'
+    )
+
+    @api.depends('order_line_ids.total_price')
+    def _compute_total_amount(self):
+        for record in self:
+            # total = 0
+            # for line in record.order_line_ids:
+            #     total += line.total_price
+
+            total_prices = record.order_line_ids.mapped('total_price')
+            total = sum(total_prices)
+            record.total_amount = total
+
+    @api.onchange('order_line_ids')
+    def _onchange_order_line_quantity(self):
+        if self.order_line_ids:
+            for line in self.order_line_ids:
+                if not self.env.context.get('check_quantity_limit', False):
+                    continue
+                if line.quantity > 1:
+                    raise ValidationError("Quantity cannot be greater than 1.")
+    
+    @api.constrains('customer_id')
+    def _check_customer_id_unique(self):
+        for record in self:
+            exist_order_id = self.env['training.order'].search([('customer_id', '=', record.customer_id.id),
+                                                                ('id', '!=', record.id)
+                                                                ], limit=1) 
+            if exist_order_id:
+                raise ValidationError("Order exist !")
+
     @api.model
     def create(self, vals):
+        sequence = self.env['ir.sequence'].search([(('code', '=', 'training.order'))], limit=1)
+        if not sequence:
+            sequence = self.env['ir.sequence'].create({
+                'name': 'Training Order Sequence',
+                'code': 'training.order',
+                'prefix': 'TO',
+                'padding': 5
+            })
+        vals['order_number'] = sequence.next_by_id()
+
         res = super().create(vals)
         return res
     
@@ -66,3 +121,73 @@ class TrainingOrder(models.Model):
     def _compute_is_approved_2(self):
         for record in self:
             record.is_approved_2 = self.env.user == record.approve_2_user_id
+    
+
+class TrainingOrderLine(models.Model):
+    _name = 'training.order.line'
+
+    order_id = fields.Many2one(
+        'training.order',
+        string="Order",
+        ondelete="cascade"
+    )
+
+    course_id = fields.Many2one(
+        'training.course',
+        string="Course",
+        ondelete="restrict"
+    )
+
+    name = fields.Char(string="Description")
+    description = fields.Text(string="Details")
+
+    quantity = fields.Float(string="Quantity", default=1,
+                              digits=(16, 2)
+                              )
+    unit_price = fields.Float(string="Unit Price", default=0.0, digits=(16, 2)
+                              )
+    total_price = fields.Float(string="Total Price",
+                               compute="_compute_total_price", store=True, readonly=False,
+                               inverse="_compute_unit_price"
+                               )
+                               
+    
+    @api.depends('quantity', 'unit_price')
+    def _compute_total_price(self):
+        for record in self:
+            record.total_price = float_round(record.quantity * record.unit_price, precision_digits=2, rounding_method='HALF-UP')
+    
+    def _compute_unit_price(self):
+        for record in self:
+            if record.quantity != 0:
+                record.unit_price = record.total_price / record.quantity
+            else:
+                record.unit_price = 0.0
+
+    def action_open_options_wizard(self):
+        self.ensure_one()
+        return {
+            'name': 'Order Line Options',
+            'type': 'ir.actions.act_window',
+            'res_model': 'training.order.options.wizard',
+            'view_mode': 'form',
+            'target': 'new',
+            'context': {
+                'default_order_line_id': self.id,
+            }
+        }
+
+class TrainingOrderOptionsWizard(models.TransientModel):
+    _name = 'training.order.options.wizard'
+    _description = 'Training Order Options Wizard'
+
+    order_line_id = fields.Many2one(
+        'training.order.line',
+        string="Order Line",
+        required=True
+    )
+
+    order_line_id_description = fields.Text(
+        string="Order Line Description",
+        related='order_line_id.description'
+    )

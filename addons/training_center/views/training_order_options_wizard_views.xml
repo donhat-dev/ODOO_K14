@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- View training.order.options.wizard form -->
+    <record id="view_training_order_options_wizard_form" model="ir.ui.view">
+        <field name="name">view.training.order.options.wizard.form</field>
+        <field name="model">training.order.options.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Training Order Options Wizard">
+                <sheet>
+                    <field name="order_line_id" invisible="1" />
+                    <div class="oe_title">
+                        <label for="order_line_id_description" />
+                        <h1>
+                            <field name="order_line_id_description" placeholder="Name..." />
+                        </h1>
+                    </div>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Action training.order.options.wizard -->
+    <record id="action_training_order_options_wizard" model="ir.actions.act_window">
+        <field name="name">Training Order Options Wizard</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">training.order.options.wizard</field>
+        <field name="domain">[]</field>
+        <field name="context">{}</field>
+    </record>
+</odoo>
