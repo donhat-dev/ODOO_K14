@@ -58,7 +58,8 @@ class TrainingOrder(models.Model):
 
     total_amount = fields.Float(
         string="Total Amount",
-        compute='_compute_total_amount'
+        compute='_compute_total_amount',
+        store="True"
     )
 
     @api.depends('order_line_ids.total_price')

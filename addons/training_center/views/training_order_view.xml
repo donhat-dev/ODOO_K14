@@ -4,7 +4,8 @@
         <field name="name">training.order.list</field>
         <field name="model">training.order</field>
         <field name="arch" type="xml">
-            <list>
+            <list string="Training Orders"
+                duplicate="false">
                 <field name="order_number"></field>
                 <!-- <field name="customer_name"></field> -->
 
@@ -74,19 +75,60 @@
                             </list>
                         </field>
                     </group>
-
-
                 </sheet>
             </form>
+        </field>
+    </record>
+
+    <record id="training_order_search" model="ir.ui.view">
+        <field name="name">training.order.search</field>
+        <field name="model">training.order</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="order_number"
+                    filter_domain="['|', ('order_number', 'ilike', self),('customer_id', 'ilike', self)]"></field>
+                <field name="customer_id"></field>
+                <filter name="My Orders" domain="[('approve_1_user_id', '=', uid)]"></filter>
+                <separator />
+                <filter name="Total Amount > 1000" domain="[('total_amount', '>', 1000)]"></filter>
+                <separator />
+                <filter name="Draft" domain="[('state', '=', 'draft')]"></filter>
+                <filter name="Approved 1" domain="[('state', '=', 'approved_1')]"></filter>
+                <filter name="Approved 2" domain="[('state', '=', 'approved_2')]"></filter>
+                <group expand="0">
+                    <filter name="State" domain="[]"
+                        context="{'group_by':  'state'}"></filter>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="training_order_kanban" model="ir.ui.view">
+        <field name="name">kanban view</field>
+        <field name="model">training.order</field>
+        <field name="priority">16</field>
+        <field name="arch" type="xml">
+            <kanban string="training.order">
+                <templates>
+                    <t t-name="card">
+                        <field name="order_number" class="fw-bold fs-1" />
+                        <field name="customer_name" display="full" />
+                        <field name="total_amount" display="full" widget="monetary"
+                            options="{&quot;no_symbol&quot;:true}" class="fw-bold fs-3 text-danger" />
+                    </t>
+                </templates>
+            </kanban>
         </field>
     </record>
 
     <record id="training_order_actions" model="ir.actions.act_window">
         <field name="name">Training Order</field>
         <field name="res_model">training.order</field>
-        <field name="view_mode">list,form</field>
+        <field name="view_mode">list,form,kanban</field>
+        <field name="search_view_id" ref="training_center.training_order_search" />
         <field name="view_id" ref="training_order_list" />
     </record>
+
 
     <menuitem
         id="training_order_root"

@@ -18,16 +18,24 @@
             </xpath>
 
             <xpath expr="." position="inside">
-                <style>
-                    .o-mail-ChatterContainer.o-aside, .o-mail-Form-chatter.o-aside{
-                        width: 50% !important;
-                    }
-                </style>
+
             </xpath>
 
             <field name="partner_id" position="after">
                 <field name="partner_id_code" />
             </field>
+
+            <xpath expr="//field[@name='source_id']" position="after">
+                <field name="campaign_id" />
+            </xpath>
+            <xpath expr="//form/sheet/notebook" position="inside">
+                <page string="Info" invisible="source_id">
+                    <group name="studio_group_3ii">
+                        <group name="studio_group_3ii_left" />
+                        <group name="studio_group_3ii_right" />
+                    </group>
+                </page>
+            </xpath>
 
             <!-- 
             <xpath expr="//chatter" position="attributes">
