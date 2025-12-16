@@ -87,7 +87,7 @@
         <field name="name">training.course.session.form</field>
         <field name="model">training.course.session</field>
         <field name="arch" type="xml">
-            <form>
+            <form create="1">
                 <sheet>
                     <group>
                         <field name="course_id" />
@@ -110,12 +110,27 @@
     <record id="view_training_course_level_tree" model="ir.ui.view">
         <field name="name">training.course.level.tree</field>
         <field name="model">training.course.level</field>
+        <field name="groups_id" eval="[(4, ref('training_center.group_training_user'))]" />
         <field name="arch" type="xml">
             <list>
                 <field name="name" />
             </list>
         </field>
     </record>
+
+    <record id="view_training_course_level_tree_manager" model="ir.ui.view">
+        <field name="name">training.course.level.tree</field>
+        <field name="model">training.course.level</field>
+        <field name="groups_id" eval="[(4, ref('training_center.group_training_manager'))]" />
+        <field name="arch" type="xml">
+            <list>
+                <field name="name" />
+                <field name="create_uid" />
+                <field name="create_date" />
+            </list>
+        </field>
+    </record>
+
     <record id="view_training_course_level_form" model="ir.ui.view">
         <field name="name">training.course.level.form</field>
         <field name="model">training.course.level</field>
@@ -133,6 +148,11 @@
         <field name="name">Course Levels</field>
         <field name="res_model">training.course.level</field>
         <field name="view_mode">list,form</field>
+        <field name="views"
+            eval="[
+            (ref('view_training_course_level_tree_manager'), 'tree'),
+            (ref('view_training_course_level_form'), 'form')
+        ]" />
     </record>
     <menuitem id="menu_training_course_level" name="Course Levels" parent="menu_training_root"
         action="action_training_course_level" sequence="40" />

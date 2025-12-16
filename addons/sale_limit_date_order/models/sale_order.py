@@ -28,9 +28,9 @@ class SaleOrder(models.Model):
     def create(self, vals_list):
 
         # Thêm vào trước gọi super() khi muốn thêm dữ liệu trước khi tạo bản ghi
-        for vals in vals_list:
-            if 'payment_term_id' in vals and vals['payment_term_id']:
-                raise ValidationError("You cannot create Sale Order with Payment Term.")
+        # for vals in vals_list:
+        #     if 'payment_term_id' in vals and vals['payment_term_id']:
+        #         raise ValidationError("You cannot create Sale Order with Payment Term.")
         
         # tag_ids = self.env['crm.tag'].search(
         #     [
@@ -41,11 +41,11 @@ class SaleOrder(models.Model):
         #     order='create_date desc'
         # )
 
-        tag_ids = self.env['crm.tag'].browse(123455)
-        tag_names = tag_ids.name
+        # tag_ids = self.env['crm.tag'].browse(123455)
+        # tag_names = tag_ids.name
 
-        for vals in vals_list:
-            vals['tag_ids'] = tag_ids.ids
+        # for vals in vals_list:
+        #     vals['tag_ids'] = tag_ids.ids
 
         records = super().create(vals_list)
 

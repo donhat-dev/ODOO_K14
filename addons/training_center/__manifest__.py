@@ -7,6 +7,7 @@
     "category": "Tools",
     "depends": ["base", "contacts", "crm", "mail"],
     "data": [
+        "security/groups.xml",
         "security/ir.model.access.csv",
         "views/training_course_view.xml",
         "views/training_order_options_wizard_views.xml",

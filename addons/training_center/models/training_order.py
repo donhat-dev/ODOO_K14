@@ -62,6 +62,12 @@ class TrainingOrder(models.Model):
         store="True"
     )
 
+    user_id = fields.Many2one(
+        'res.users',
+        string="Salesperson",
+        default=lambda self: self.env.user
+    )
+
     @api.depends('order_line_ids.total_price')
     def _compute_total_amount(self):
         for record in self:
@@ -108,6 +114,9 @@ class TrainingOrder(models.Model):
     
 
     def button_approve_1(self):
+        if not self.env.user.has_group('training_center.group_training_manager'):
+            raise ValidationError("You do not have permission to approve at Level 1.")
+
         for record in self:
             record.state = 'approved_1'
 
