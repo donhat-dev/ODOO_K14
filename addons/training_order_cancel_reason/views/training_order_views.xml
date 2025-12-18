@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- View training.order form -->
+    <record id="view_training_order_form" model="ir.ui.view">
+        <field name="name">view.training.order.form</field>
+        <field name="model">training.order</field>
+        <field name="inherit_id" ref="training_center.training_order_form" />
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='order_date']" position="after">
+                <field name="cancel_reason" />
+            </xpath>
+            <header position="inside">
+                <field name="id" invisible="1" />
+                <button name="%(training_order_cancel_reason.action_training_order_cancel_wizard)d"
+                    type="action"
+                    string="Cancel"
+                    invisible="state in ['done', 'canceled']"
+                    context="{'default_training_order_id': id}"
+                ></button>
+
+            </header>
+
+            <xpath expr="//sheet/group" position="before">
+                <div class="oe_button_box" name="button_box">
+                    <button name="action_view_order_lines"
+                        type="object"
+                        class="oe_stat_button"
+                        icon="fa-info"
+                    >
+                        <field name="order_line_count" widget="statinfo" string="Order Lines"></field>
+                    </button>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
