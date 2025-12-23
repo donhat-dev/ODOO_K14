@@ -7,12 +7,15 @@ class TrainingCourse(models.Model):
     _description = 'Training Course'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
+    def _default_active(self):
+        return True
+
     name = fields.Char(string="Course Name", required=True, tracking=True)
     code = fields.Char(string="Course Code", required=True)
     description = fields.Text(string="Description", tracking=True)
     start_date = fields.Date(string="Start Date", tracking=True)
     end_date = fields.Date(string="End Date")
-    active = fields.Boolean(string="Active", default=True)
+    active = fields.Boolean(string="Active", default=_default_active)
 
     state = fields.Selection(
         [('draft', 'Draft'),

@@ -3,6 +3,10 @@ from odoo.http import request
 from odoo.http import Response
 import json
 
+import logging
+
+_logger = logging.getLogger(__name__)
+
 class TrainingCenterController(http.Controller):
 
     @http.route(
@@ -102,11 +106,13 @@ class TrainingCenterController(http.Controller):
             
             new_order = training_order_obj.sudo().create(create_data)
 
+            _logger.info("Created new training order with ID: %s", new_order.id)
             return request.make_json_response(
                 data={"id": new_order.id},
                 status=200
             )
         except Exception as e:
+            _logger.error("Error creating training order: %s", str(e))
             return request.make_json_response(
                 data=str(e),
                 status=500
